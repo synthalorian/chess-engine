@@ -83,3 +83,11 @@ Requires C++20. Tested on GCC 13+ and Clang 16+.
 ---
 
 *Sixty-four squares. Two armies. One optimal line. Search on.*
+
+---
+
+## ☕ Support the Developer
+
+If this project saved you time, solved a problem, or just made your day a little more neon, you can fuel the next one:
+
+[![Buy Me A Coffee](https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png)](https://buymeacoffee.com/synthalorian)
