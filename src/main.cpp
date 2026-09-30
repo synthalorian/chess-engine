@@ -30,8 +30,8 @@ public:
             iss >> cmd;
             
             if (cmd == "uci") {
-                std::cout << "id name blackclaw-chess v1.0\n";
-                std::cout << "id author blackclaw\n";
+                std::cout << "id name chess-engine v1.0\n";
+                std::cout << "id author synth\n";
                 std::cout << "uciok\n";
             } else if (cmd == "isready") {
                 std::cout << "readyok\n";
