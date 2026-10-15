@@ -1,3 +1,5 @@
+![chess-engine](.github/preview.png)
+
 # Chess Engine
 
 > *"Every position has a truth. The engine just searches deeper than you can dream."*
