@@ -21,3 +21,5 @@ jobs:
       - name: System deps
         run: sudo apt-get update -qq && sudo apt-get install -y -qq libsdl2-dev libncurses-dev >/dev/null
       - run: make
+      - name: Perft tests
+        run: make test
