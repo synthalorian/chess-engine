@@ -91,23 +91,29 @@ static void generate_king_moves(const Board& board, std::vector<Move>& moves, Co
         poplsb(attacks);
     }
     
-    // Castling
+    // Castling: the king may not start in, cross, or land in check.
+    if (board.in_check(us)) return;
+    Color them = ~us;
     if (us == WHITE) {
         if (board.can_castle_kingside(WHITE)) {
-            if ((board.all_occupied & (sq_bb(F1) | sq_bb(G1))) == 0)
+            if ((board.all_occupied & (sq_bb(F1) | sq_bb(G1))) == 0 &&
+                !board.attackers_to(F1, them) && !board.attackers_to(G1, them))
                 add_move(moves, E1, G1, FLAG_CASTLE_K);
         }
         if (board.can_castle_queenside(WHITE)) {
-            if ((board.all_occupied & (sq_bb(B1) | sq_bb(C1) | sq_bb(D1))) == 0)
+            if ((board.all_occupied & (sq_bb(B1) | sq_bb(C1) | sq_bb(D1))) == 0 &&
+                !board.attackers_to(D1, them) && !board.attackers_to(C1, them))
                 add_move(moves, E1, C1, FLAG_CASTLE_Q);
         }
     } else {
         if (board.can_castle_kingside(BLACK)) {
-            if ((board.all_occupied & (sq_bb(F8) | sq_bb(G8))) == 0)
+            if ((board.all_occupied & (sq_bb(F8) | sq_bb(G8))) == 0 &&
+                !board.attackers_to(F8, them) && !board.attackers_to(G8, them))
                 add_move(moves, E8, G8, FLAG_CASTLE_K);
         }
         if (board.can_castle_queenside(BLACK)) {
-            if ((board.all_occupied & (sq_bb(B8) | sq_bb(C8) | sq_bb(D8))) == 0)
+            if ((board.all_occupied & (sq_bb(B8) | sq_bb(C8) | sq_bb(D8))) == 0 &&
+                !board.attackers_to(D8, them) && !board.attackers_to(C8, them))
                 add_move(moves, E8, C8, FLAG_CASTLE_Q);
         }
     }
@@ -118,13 +124,19 @@ static void generate_sliding_moves(const Board& board, std::vector<Move>& moves,
     U64 own = board.occupied[us];
     static const int ROOK_DIRS[4][2] = {{-1,0}, {1,0}, {0,-1}, {0,1}};
     static const int BISHOP_DIRS[4][2] = {{-1,-1}, {-1,1}, {1,-1}, {1,1}};
-    const int (*dirs)[2] = (pt == ROOK) ? ROOK_DIRS : BISHOP_DIRS;
+    static const int QUEEN_DIRS[8][2] = {
+        {-1,0}, {1,0}, {0,-1}, {0,1},
+        {-1,-1}, {-1,1}, {1,-1}, {1,1}
+    };
+    const int (*dirs)[2] = pt == QUEEN ? QUEEN_DIRS :
+                          (pt == ROOK ? ROOK_DIRS : BISHOP_DIRS);
+    const int direction_count = pt == QUEEN ? 8 : 4;
     
     while (pieces_bb) {
         Square s = lsb(pieces_bb);
         int f = file_of(s), r = rank_of(s);
         
-        for (int d = 0; d < 4; d++) {
+        for (int d = 0; d < direction_count; d++) {
             int nf = f + dirs[d][0];
             int nr = r + dirs[d][1];
             while (nr >= 0 && nr < 8 && nf >= 0 && nf < 8) {

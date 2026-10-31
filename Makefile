@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -std=c++17 -O3 -Wall -Wextra
+CXXFLAGS = -std=c++17 -O2 -Wall -Wextra
 SRCDIR = src
 OBJDIR = obj
 BINDIR = .
@@ -8,7 +8,7 @@ SOURCES = $(wildcard $(SRCDIR)/*.cpp)
 OBJECTS = $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SOURCES))
 TARGET = $(BINDIR)/chess-engine
 
-.PHONY: all clean test
+.PHONY: all clean test test-slow
 
 all: $(TARGET)
 
@@ -22,13 +22,17 @@ $(OBJDIR):
 	mkdir -p $(OBJDIR)
 
 clean:
-	rm -rf $(OBJDIR) $(TARGET)
+	rm -rf $(OBJDIR) $(TARGET) $(TEST_TARGET)
 
-test: $(TARGET)
-	@echo "=== UCI test ==="
-	@echo "uci" | ./$(TARGET)
-	@echo ""
-	@echo "=== Position test ==="
-	@echo -e "position startpos\nd\nperft 3\nmoves\nquit" | ./$(TARGET)
+TEST_TARGET = tests/perft_test
+
+$(TEST_TARGET): tests/perft_test.cpp src/board.cpp src/movegen.cpp src/board.h src/move.h src/bitboard.h
+	$(CXX) $(CXXFLAGS) -Isrc tests/perft_test.cpp src/board.cpp src/movegen.cpp -o $@
+
+test: $(TEST_TARGET)
+	./$(TEST_TARGET)
+
+test-slow: $(TEST_TARGET)
+	./$(TEST_TARGET) --slow
 
 .DEFAULT_GOAL := all

@@ -273,9 +273,9 @@ U64 Board::attackers_to(Square sq, Color by) const {
     // Pawns
     U64 pawns = pieces[PAWN + (by == BLACK ? 6 : 0)];
     if (by == WHITE) {
-        attackers |= ((shift_se(pawns) | shift_sw(pawns)) & sq_bb(sq));
+        attackers |= (shift_se(sq_bb(sq)) | shift_sw(sq_bb(sq))) & pawns;
     } else {
-        attackers |= ((shift_ne(pawns) | shift_nw(pawns)) & sq_bb(sq));
+        attackers |= (shift_ne(sq_bb(sq)) | shift_nw(sq_bb(sq))) & pawns;
     }
     
     // Knights
