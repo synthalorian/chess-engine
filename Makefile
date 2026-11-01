@@ -35,9 +35,10 @@ $(TEST_TARGET): tests/perft_test.cpp src/board.cpp src/movegen.cpp src/board.h s
 $(STATS_TEST_TARGET): tests/perft_stats_test.cpp src/perft_stats.h
 	$(CXX) $(CXXFLAGS) -Isrc $< -o $@
 
-test: $(TEST_TARGET) $(STATS_TEST_TARGET)
+test: $(TARGET) $(TEST_TARGET) $(STATS_TEST_TARGET)
 	./$(TEST_TARGET)
 	./$(STATS_TEST_TARGET)
+	sh tests/default_position_test.sh ./$(TARGET)
 
 test-slow: $(TEST_TARGET)
 	./$(TEST_TARGET) --slow

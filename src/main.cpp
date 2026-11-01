@@ -21,7 +21,11 @@ class UCIEngine {
     std::thread search_thread;
     
 public:
-    UCIEngine() { init_attack_tables(); }
+    UCIEngine() {
+        init_attack_tables();
+        // Start from the standard position so commands work before any "position".
+        board.parse_fen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+    }
     
     void loop() {
         std::string line;
