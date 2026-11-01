@@ -6,6 +6,7 @@
 #include <atomic>
 #include <chrono>
 #include "board.h"
+#include "perft_stats.h"
 
 // Forward declarations
 std::vector<Move> generate_legal_moves(const Board& board);
@@ -55,10 +56,8 @@ public:
                 auto start = std::chrono::steady_clock::now();
                 unsigned long long nodes = perft(board, depth);
                 auto end = std::chrono::steady_clock::now();
-                auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-                std::cout << "perft(" << depth << ") = " << nodes;
-                if (ms > 0) std::cout << "  (" << (nodes / ms) << " nps)";
-                std::cout << "\n";
+                std::cout << "perft(" << depth << ") = " << nodes
+                          << "  (" << static_cast<unsigned long long>(nodes_per_second(nodes, end - start)) << " nps)\n";
             } else if (cmd == "moves") {
                 auto moves = generate_legal_moves(board);
                 std::cout << "legal moves (" << moves.size() << "):\n";
